@@ -8,7 +8,7 @@ import java.io.IOException;
 
 /** Maze class to provide the representation of the maze
  *  @author Sam Zhen
- *  @version 25th April 2021
+ *  @version 26th April 2021
  */
 public class Maze 
 {
