@@ -62,7 +62,14 @@ public class Tile
 	 */
 	public boolean isNavigable() 
 	{
-		return false;
+		if (type == Tile.Type.WALL)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
 	}	
 
 	/** Converts the tile into its string representation
