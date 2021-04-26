@@ -15,7 +15,7 @@ public class Maze
 	/**
 	 * Provides a representation of the four cardinal directions
 	 */
-	enum Direction 
+	public enum Direction 
 	{
 		NORTH,SOUTH,EAST,WEST;
 	}
@@ -113,8 +113,86 @@ public class Maze
 	 * @param d: The direction from the origin tile
 	 * @return Returns the tile that is in the direction of the origin tile
 	 */
-	public Tile getAdjacent(Tile t, Direction d) 
+	public Tile getAdjacent(Tile t, Direction d)
 	{
+		switch (d)
+		{
+			case NORTH:
+				for(int i = 0; i < tiles.size(); i++)
+				{
+					if (tiles.get(i).contains(t))
+					{
+						int index = tiles.get(i).indexOf(t);
+						try
+						{
+							return tiles.get(i - 1).get(index);
+						}
+						catch(IndexOutOfBoundsException e)
+						{
+							return null;
+						}
+					}
+				}
+				break;
+
+			case SOUTH:
+				for(int i = 0; i < tiles.size(); i++)
+				{
+					if (tiles.get(i).contains(t))
+					{
+						int index = tiles.get(i).indexOf(t);
+						try
+						{
+							return tiles.get(i + 1).get(index);
+						}
+						catch(IndexOutOfBoundsException e)
+						{
+							return null;
+						}
+					}
+				}
+				break;
+
+			case EAST:
+				for(int i = 0; i < tiles.size(); i++)
+				{
+					if (tiles.get(i).contains(t))
+					{
+						int index = tiles.get(i).indexOf(t) + 1;
+						try
+						{
+							return tiles.get(i).get(index + 1);
+						}
+						catch(IndexOutOfBoundsException e)
+						{
+							return null;
+						}
+					}
+				}
+				break;
+
+			case WEST:
+				for(int i = 0; i < tiles.size(); i++)
+				{
+					if (tiles.get(i).contains(t))
+					{
+						int index = tiles.get(i).indexOf(t) - 1;
+						try
+						{
+							return tiles.get(i).get(index - 1);
+						}
+						catch(IndexOutOfBoundsException e)
+						{
+							return null;
+						}
+					}
+				}
+				break;
+
+			default:
+
+				return null;
+		}
 		return null;
 	}
 

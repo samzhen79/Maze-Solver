@@ -10,7 +10,7 @@ public class Tile
 	/**
 	 * Provides a representation of all the different tile types
 	 */
-	enum Type 
+	public enum Type 
 	{
 		CORRIDOR,ENTRANCE,EXIT,WALL;
 	}

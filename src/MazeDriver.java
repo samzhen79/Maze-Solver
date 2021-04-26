@@ -1,4 +1,5 @@
 import maze.Maze;
+import maze.Tile;
 import maze.InvalidMazeException;
 import java.io.Console;
 import java.io.FileNotFoundException;
@@ -23,7 +24,7 @@ public class MazeDriver
 				Console keyboardConsole = System.console();
 				path = keyboardConsole.readLine("\nEnter file path: ");
 
-				maze = Maze.fromTxt(path);
+				maze = Maze.fromTxt("C:/Users/samba/gitrepos/comp16412-coursework-2_x74717zz/resources/mazes/maze1.txt");
 				done = true;
 	    	}
 	    	catch(FileNotFoundException e)
@@ -39,8 +40,17 @@ public class MazeDriver
 	    		System.err.print(e);
 	    	}
     	}
-
+		Tile tile = maze.getAdjacent(maze.getEntrance(), Maze.Direction.NORTH);
     	System.out.println(maze.toString());
+    	if (tile != null)
+    	{
+    		System.out.println(tile.toString());
+    	}
+    	else
+    	{
+    		System.out.println("null tile");
+    	}
+    	
 
     }
 }
