@@ -1,4 +1,5 @@
 import maze.Maze;
+import maze.Maze.Coordinate;
 import maze.Tile;
 import maze.InvalidMazeException;
 import java.io.Console;
@@ -40,7 +41,9 @@ public class MazeDriver
 	    		System.err.print(e);
 	    	}
     	}
-		Tile tile = maze.getAdjacent(maze.getEntrance(), Maze.Direction.NORTH);
+
+    	Coordinate c  = maze.new Coordinate(0,0);
+		Tile tile = maze.getTileAtLocation(c);
     	System.out.println(maze.toString());
     	if (tile != null)
     	{
@@ -50,6 +53,11 @@ public class MazeDriver
     	{
     		System.out.println("null tile");
     	}
+
+    	System.out.println(c.toString());
+    	Coordinate d = maze.getTileLocation(maze.getEntrance());
+    	System.out.println(d.toString());
+
     	
 
     }

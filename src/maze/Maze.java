@@ -218,7 +218,17 @@ public class Maze
 	 */
 	public Tile getTileAtLocation(Coordinate c) 
 	{
-		return null;
+		int x = c.getX();
+		int y = tiles.size() - c.getY() - 1;
+
+		try
+		{
+			return tiles.get(y).get(x);
+		}
+		catch(IndexOutOfBoundsException e)
+		{
+			return null;
+		}
 	}
 
 	/** Gets the location of a given tile
@@ -227,6 +237,15 @@ public class Maze
 	 */
 	public Coordinate getTileLocation(Tile t) 
 	{
+		for(int i = 0; i < tiles.size(); i++)
+		{
+			if (tiles.get(i).contains(t))
+			{
+				int x = tiles.get(i).indexOf(t);
+				int y = tiles.size() - i - 1;
+				return new Coordinate(x,y);
+			}
+		}
 		return null;
 	}
 
@@ -291,7 +310,7 @@ public class Maze
 		 * @param xIn: The x-coordinate input
 		 * @param yIn: The y-coordinate input
 		 */
-		public void Coordinate(int xIn, int yIn) 
+		public Coordinate(int xIn, int yIn) 
 		{
 			x = xIn;
 			y = yIn;
@@ -318,7 +337,8 @@ public class Maze
 		 */
 		public String toString() 
 		{
-			return null;
+
+			return "(" + String.valueOf(x) + "," + String.valueOf(y) + ")";
 		}
 	}
 }
