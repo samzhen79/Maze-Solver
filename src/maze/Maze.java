@@ -1,4 +1,10 @@
 package maze;
+import java.util.List;
+import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /** Maze class to provide the representation of the maze
  *  @author Sam Zhen
@@ -18,18 +24,88 @@ public class Maze
 	private Tile exit;
 	private List<List<Tile>> tiles;
 
-	private void Maze() 
+	private Maze() 
 	{
 
 	}
 
 	/** Constructs a maze from a given text file
-	 * @param s: The full file path to the text file
-	 * @return Returns a maze produced by converting the given string
+	 * @param path: The full file path to the text file
+	 * @return Returns a maze produced by converting the given string found in the text file
 	 */
-	public static Maze fromTxt(String s) 
+	public static Maze fromTxt(String path) throws FileNotFoundException, IOException, InvalidMazeException
 	{
+		Maze maze = new Maze();
 
+		ArrayList<List<Tile>> list = new ArrayList<List<Tile>>();
+
+		BufferedReader reader = new BufferedReader(new FileReader(path));
+
+		String line;
+
+		while ((line = reader.readLine()) != null)
+		{
+			ArrayList<Tile> sublist = new ArrayList<Tile>();
+
+			for (int i = 0; i < line.length(); i++)
+			{
+				Tile t = Tile.fromChar(line.charAt(i));
+				switch(t.getType())
+				{
+					case ENTRANCE:
+						if (maze.getEntrance() == null)
+						{
+							maze.setEntrance(t);
+						}
+						else
+						{
+							throw new MultipleEntranceException("Too many entrances");
+						}
+						break;
+
+					case EXIT:
+						if (maze.getExit() == null)
+						{
+							maze.setExit(t);
+						}
+						else
+						{
+							throw new MultipleExitException("Too many exits");
+						}
+						break;
+
+					default:
+
+				}
+
+				sublist.add(t);
+			}
+
+			list.add(sublist);
+		}
+
+		if (maze.getEntrance() == null)
+		{
+			throw new NoEntranceException("No entrance");
+		}
+		else if (maze.getExit() == null)
+		{
+			throw new NoExitException("No exit");
+		}
+
+		int length = list.get(0).size();
+
+		for (int i = 1; i < list.size(); i++)
+		{
+			if (length != list.get(i).size())
+			{
+				throw new RaggedMazeException("Ragged maze");
+			}
+		}
+
+		maze.setTiles(list);
+
+		return maze;
 	}
 
 	/** Gets the tile adjacent to a tile
@@ -39,7 +115,7 @@ public class Maze
 	 */
 	public Tile getAdjacent(Tile t, Direction d) 
 	{
-
+		return null;
 	}
 
 	/** Gets the entrance tile
@@ -64,7 +140,7 @@ public class Maze
 	 */
 	public Tile getTileAtLocation(Coordinate c) 
 	{
-
+		return null;
 	}
 
 	/** Gets the location of a given tile
@@ -73,7 +149,7 @@ public class Maze
 	 */
 	public Coordinate getTileLocation(Tile t) 
 	{
-
+		return null;
 	}
 
 	/** Gets the tiles of the maze
@@ -94,12 +170,30 @@ public class Maze
 		exit = t;
 	}
 
+	private void setTiles(List<List<Tile>> list)
+	{
+		tiles = list;
+	}
+
 	/** Converts the maze into its text representation
 	 * @return Returns a String produced from the maze
 	 */
 	public String toString() 
 	{
+		String string = new String();
 
+		for (int i = 0; i < tiles.size(); i++)
+		{
+			List<Tile> tilesList = tiles.get(i);
+			for (int k = 0; k < tilesList.size(); k++)
+			{
+				string = string.concat(tilesList.get(k).toString());
+			}
+
+			string = string.concat("\n");
+		}
+
+		return string;
 	}
 
 	/** Coordinate class to manage 2D coordinates of the maze
@@ -146,7 +240,7 @@ public class Maze
 		 */
 		public String toString() 
 		{
-
+			return null;
 		}
 	}
 }

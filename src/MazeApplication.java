@@ -1,4 +1,5 @@
 import javafx.application.Application;
+
 /** The MazeApplication class is a JavaFX application.
  *  Allows the user to specify a text file containing a maze representation.
  *  The graphical representation of the maze is displayed to the user.
@@ -9,13 +10,16 @@ import javafx.application.Application;
  *  @author Sam Zhen
  *  @version 25th April 2021
  */
-public class MazeApplication extends Application {
+public class MazeApplication extends Application 
+{
 
-	public static void main(String[] args) {
+	public static void main(String[] args) 
+	{
 
 	}
 
-	public static void start(Stage stage) {
+	public static void start(Stage stage) 
+	{
 
 	}
 }

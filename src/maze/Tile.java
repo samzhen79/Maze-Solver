@@ -17,9 +17,9 @@ public class Tile
 
 	private Type type;
 
-	private void Tile(Type t) 
+	private Tile(Type t) 
 	{
-
+		type = t;
 	}
 
 	/** Constructs a Tile from an input character
@@ -27,7 +27,25 @@ public class Tile
 	 *  @return Returns the Tile with type determined by the input character
 	 */
 	protected static Tile fromChar(char c) 
-	{
+	{	
+		switch(c)
+		{
+			case '.':
+				return new Tile(Tile.Type.CORRIDOR);
+
+			case 'e':
+				return new Tile(Tile.Type.ENTRANCE);
+
+			case 'x':
+				return new Tile(Tile.Type.EXIT);
+				
+			case '#':
+				return new Tile(Tile.Type.WALL);
+
+			default:
+				System.out.println("oh no, bad char");
+				return null;
+		}
 
 	}
 
@@ -44,14 +62,32 @@ public class Tile
 	 */
 	public boolean isNavigable() 
 	{
-
-	}
+		return false;
+	}	
 
 	/** Converts the tile into its string representation
 	 *  @return Returns a string produced from the tile
 	 */
 	public String toString() 
-	{
+	{	
+		switch(type)
+		{
+			case CORRIDOR:
+				return new String(".");
 
+			case ENTRANCE:
+				return new String("e");
+
+			case EXIT:
+				return new String("x");
+
+			case WALL:
+				return new String("#");
+
+			default:
+				System.out.println("oh no, bad type");
+				return null;
+
+		}
 	}
 }
