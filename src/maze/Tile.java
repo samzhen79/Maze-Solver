@@ -1,10 +1,12 @@
 package maze;
 
+import java.io.Serializable;
+
 /** Tile class that represents one space within a maze
  *  @author Sam Zhen
  *  @version 25th April 2021
  */
-public class Tile 
+public class Tile implements Serializable
 {
 
 	/**

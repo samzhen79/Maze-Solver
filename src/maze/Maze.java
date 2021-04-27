@@ -5,12 +5,13 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.Serializable;
 
 /** Maze class to provide the representation of the maze
  *  @author Sam Zhen
  *  @version 27th April 2021
  */
-public class Maze 
+public class Maze implements java.io.Serializable
 {
 	/**
 	 * Provides a representation of the four cardinal directions

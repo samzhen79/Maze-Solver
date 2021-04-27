@@ -53,14 +53,29 @@ public class MazeDriver
 			Console keyboardConsole = System.console();
 			step = keyboardConsole.readLine("\nStep");
 			
-			try
+			if("step".equals(step))
 			{
-				finished = routefinder.step();
-				System.out.println(routefinder.toString());
+				try
+				{
+					finished = routefinder.step();
+					System.out.println(routefinder.toString());
+				}
+				catch (NoRouteFoundException e)
+				{
+					System.out.println("No route found");
+				}
 			}
-			catch (NoRouteFoundException e)
+			else if("save".equals(step))
 			{
-				System.out.println("No route found");
+				keyboardConsole = System.console();
+				path = keyboardConsole.readLine("\nEnter file path: ");
+				routefinder.save(path)
+			}
+			else if("load".equals(step))
+			{
+				keyboardConsole = System.console();
+				path = keyboardConsole.readLine("\nEnter file path: ");
+				routefinder = routefinder.load(path);
 			}
 			
     	}

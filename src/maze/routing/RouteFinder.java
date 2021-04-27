@@ -2,17 +2,26 @@ package maze.routing;
 
 import maze.Maze;
 import maze.Tile;
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
 import java.util.List;
 import java.util.Stack;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.EmptyStackException;
+import java.lang.ClassNotFoundException;
 
 /** RouteFinder attempts to find a route from entrance to exit of a maze.
  * The state of the RouteFinder can be stepped through.
  *  @author Sam Zhen
  *  @version 27th April 2021
  */
-public class RouteFinder
+public class RouteFinder implements java.io.Serializable
 {
 	private Maze maze;
 	private Stack<Tile> route;
@@ -64,16 +73,50 @@ public class RouteFinder
 	 */
 	public static RouteFinder load(String path)
 	{
-		return null;
+		try
+		{
+			FileInputStream file = new FileInputStream(path);
+			ObjectInputStream in = new ObjectInputStream(file);
+
+			RouteFinder routefinder = (RouteFinder)in.readObject();
+
+			in.close();
+			file.close();
+
+			return routefinder;
+		}
+		catch(IOException e)
+		{
+			System.out.println("IOException caught");
+			return null;
+		}
+		catch(ClassNotFoundException e)
+		{
+			System.out.println("ClassNotFoundException caught"); 
+			return null;
+		}
 	}
 
-	/** Loads a RouteFinder object from a text file
-	 *  @param filename: The name of the text file
-	 *  @return Returns the RouteFinder object that was loaded from the text file
+	/** Loads a RouteFinder object from a file
+	 *  @param filename: The name of the file and its path
 	 */
 	public void save(String filename)
 	{
+		try
+		{
+			FileOutputStream file = new FileOutputStream(filename);
+			ObjectOutputStream out = new ObjectOutputStream(file);
 
+			out.writeObject(this);
+
+			out.close();
+			file.close();
+		}
+		catch(IOException e)
+		{
+			System.out.println("IOException caught");
+			System.err.println(e);
+		}
 	}
 
 	/** Updates the stack (route).
@@ -83,13 +126,14 @@ public class RouteFinder
 	 */
 	public boolean step() throws NoRouteFoundException
 	{
+		Tile current;
 		try
 		{
-			Tile current = route.peek();
+			current = route.peek();
 		}
 		catch (EmptyStackException e)
 		{
-			throw new NoRouteFoundException;
+			throw new NoRouteFoundException("No route");
 		}
 		Tile[] tilelist = new Tile[4];
 
