@@ -8,7 +8,7 @@ import java.io.IOException;
 
 /** Maze class to provide the representation of the maze
  *  @author Sam Zhen
- *  @version 26th April 2021
+ *  @version 27th April 2021
  */
 public class Maze 
 {
@@ -158,7 +158,7 @@ public class Maze
 				{
 					if (tiles.get(i).contains(t))
 					{
-						int index = tiles.get(i).indexOf(t) + 1;
+						int index = tiles.get(i).indexOf(t);
 						try
 						{
 							return tiles.get(i).get(index + 1);
@@ -176,7 +176,7 @@ public class Maze
 				{
 					if (tiles.get(i).contains(t))
 					{
-						int index = tiles.get(i).indexOf(t) - 1;
+						int index = tiles.get(i).indexOf(t);
 						try
 						{
 							return tiles.get(i).get(index - 1);
