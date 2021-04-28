@@ -1,10 +1,11 @@
 package maze;
 
+import maze.InvalidMazeException;
 import java.io.Serializable;
 
 /** Tile class that represents one space within a maze
  *  @author Sam Zhen
- *  @version 25th April 2021
+ *  @version 28th April 2021
  */
 public class Tile implements Serializable
 {
@@ -28,7 +29,7 @@ public class Tile implements Serializable
 	 *  @param c: The input character to be converted
 	 *  @return Returns the Tile with type determined by the input character
 	 */
-	protected static Tile fromChar(char c) 
+	protected static Tile fromChar(char c) throws InvalidMazeException
 	{	
 		switch(c)
 		{
@@ -45,8 +46,7 @@ public class Tile implements Serializable
 				return new Tile(Tile.Type.WALL);
 
 			default:
-				System.out.println("oh no, bad char");
-				return null;
+				throw new InvalidMazeException("Invalid char");
 		}
 
 	}

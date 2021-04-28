@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 /** Maze class to provide the representation of the maze
  *  @author Sam Zhen
- *  @version 27th April 2021
+ *  @version 28th April 2021
  */
 public class Maze implements java.io.Serializable
 {
@@ -50,39 +50,65 @@ public class Maze implements java.io.Serializable
 
 			for (int i = 0; i < line.length(); i++)
 			{
-				Tile t = Tile.fromChar(line.charAt(i));
-				switch(t.getType())
+				Tile t = null;
+
+				try
 				{
-					case ENTRANCE:
-						if (maze.getEntrance() == null)
-						{
-							maze.setEntrance(t);
-						}
-						else
-						{
-							throw new MultipleEntranceException("Too many entrances");
-						}
-						break;
-
-					case EXIT:
-						if (maze.getExit() == null)
-						{
-							maze.setExit(t);
-						}
-						else
-						{
-							throw new MultipleExitException("Too many exits");
-						}
-						break;
-
-					default:
-
+					t = Tile.fromChar(line.charAt(i));
+				}
+				catch(InvalidMazeException e)
+				{
+					throw e;
 				}
 
 				sublist.add(t);
 			}
 
 			list.add(sublist);
+		}
+
+		maze.setTiles(list);
+
+		int length = list.get(0).size();
+
+		for (int i = 0; i < list.size(); i++)
+		{
+			if (length != list.get(i).size())
+			{
+				throw new RaggedMazeException("Ragged maze");
+			}
+
+			for (int k = 0; k < list.get(i).size(); k++)
+			{	
+				Tile t = list.get(i).get(k);
+				switch (list.get(i).get(k).getType())
+				{
+
+					case ENTRANCE:
+						try
+						{
+							maze.setEntrance(t);
+						}
+						catch(MultipleEntranceException e)
+						{
+							throw e;
+						}
+						break;
+
+					case EXIT:
+						try
+						{
+							maze.setExit(t);
+						}
+						catch(MultipleExitException e)
+						{
+							throw e;
+						}
+						break;
+
+					default:
+				}
+			}
 		}
 
 		if (maze.getEntrance() == null)
@@ -93,19 +119,7 @@ public class Maze implements java.io.Serializable
 		{
 			throw new NoExitException("No exit");
 		}
-
-		int length = list.get(0).size();
-
-		for (int i = 1; i < list.size(); i++)
-		{
-			if (length != list.get(i).size())
-			{
-				throw new RaggedMazeException("Ragged maze");
-			}
-		}
-
-		maze.setTiles(list);
-
+		
 		return maze;
 	}
 
@@ -114,7 +128,7 @@ public class Maze implements java.io.Serializable
 	 * @param d: The direction from the origin tile
 	 * @return Returns the tile that is in the direction of the origin tile
 	 */
-	public Tile getAdjacent(Tile t, Direction d)
+	public Tile getAdjacentTile(Tile t, Direction d)
 	{
 		switch (d)
 		{
@@ -258,14 +272,40 @@ public class Maze implements java.io.Serializable
 		return tiles;
 	}
 
-	private void setEntrance(Tile t) 
+	private void setEntrance(Tile t) throws MultipleEntranceException
 	{
-		entrance = t;
+		if (entrance == null)
+		{	
+			for (int i = 0; i < tiles.size(); i++)
+			{
+				if (tiles.get(i).contains(t))
+				{
+					entrance = t;
+				}
+			}
+		}
+		else
+		{
+			throw new MultipleEntranceException("Multiple entrances set");
+		}
 	}
 
-	private void setExit(Tile t) 
+	private void setExit(Tile t) throws MultipleExitException
 	{
-		exit = t;
+		if (exit == null)
+		{
+			for (int i = 0; i < tiles.size(); i++)
+			{
+				if (tiles.get(i).contains(t))
+				{
+					exit = t;
+				}
+			}
+		}
+		else
+		{
+			throw new MultipleExitException("Multiple exits set");
+		}
 	}
 
 	private void setTiles(List<List<Tile>> list)
@@ -339,7 +379,7 @@ public class Maze implements java.io.Serializable
 		public String toString() 
 		{
 
-			return "(" + String.valueOf(x) + "," + String.valueOf(y) + ")";
+			return "(" + String.valueOf(x) + ", " + String.valueOf(y) + ")";
 		}
 	}
 }

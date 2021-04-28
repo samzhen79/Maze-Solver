@@ -1,7 +1,6 @@
 package maze.routing;
 
-import maze.Maze;
-import maze.Tile;
+import maze.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -19,7 +18,7 @@ import java.lang.ClassNotFoundException;
 /** RouteFinder attempts to find a route from entrance to exit of a maze.
  * The state of the RouteFinder can be stepped through.
  *  @author Sam Zhen
- *  @version 27th April 2021
+ *  @version 28th April 2021
  */
 public class RouteFinder implements java.io.Serializable
 {
@@ -27,7 +26,6 @@ public class RouteFinder implements java.io.Serializable
 	private Stack<Tile> route;
 	private boolean finished;
 
-	private Tile back;
 	private Set<Tile> routehistory;
 
 	/** Constructs a RouteFinder with the specified maze
@@ -121,12 +119,17 @@ public class RouteFinder implements java.io.Serializable
 
 	/** Updates the stack (route).
 	 *  A call to this method should make exactly one move through the maze
-	 *  @return Returns true if the maze is complete
+	 *  @return Returns true if the route is complete
 	 *  @throws NoRouteFoundException If there is no possible route to solve the maze
 	 */
 	public boolean step() throws NoRouteFoundException
 	{
+		if (finished)
+		{
+			return finished;
+		}
 		Tile current;
+
 		try
 		{
 			current = route.peek();
@@ -135,36 +138,37 @@ public class RouteFinder implements java.io.Serializable
 		{
 			throw new NoRouteFoundException("No route");
 		}
-		Tile[] tilelist = new Tile[4];
 
-		tilelist[0] = maze.getAdjacent(current, Maze.Direction.EAST);
-		tilelist[1] = maze.getAdjacent(current, Maze.Direction.SOUTH);
-		tilelist[2] = maze.getAdjacent(current, Maze.Direction.WEST);
-		tilelist[3] = maze.getAdjacent(current, Maze.Direction.NORTH);
+		Maze.Direction[] directionlist = new Maze.Direction[4];
 
-		if (current == maze.getExit())
+		directionlist[0] = Maze.Direction.EAST;
+		directionlist[1] = Maze.Direction.SOUTH;
+		directionlist[2] = Maze.Direction.WEST;
+		directionlist[3] = Maze.Direction.NORTH;
+
+		for (int i = 0; i < 4; i++)
 		{
-			finished = true;
-		}
-		else
-		{
-			for (int i = 0; i < 4; i++)
-			{
-				Tile tile = tilelist[i];
-				if (tile != null && !routehistory.contains(tile))
-				{
-					if (tile.isNavigable() == true)
-					{
-						routehistory.add(tile);
-						route.push(tile);
-						return finished;
-					}
+			Tile tile = maze.getAdjacentTile(current, directionlist[i]);
 
+			if (tile != null)
+			{	
+				if (tile == maze.getExit())
+				{	
+					route.push(tile);
+					finished = true;
+					return finished;
 				}
+				else if (tile.isNavigable() == true && !routehistory.contains(tile))
+				{
+					routehistory.add(tile);
+					route.push(tile);
+					return finished;
+				}
+
 			}
-			back = route.pop();
 		}
-		
+
+		route.pop();
 		return finished;
 	}
 
