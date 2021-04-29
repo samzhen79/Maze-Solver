@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"maze"},{"l":"maze.routing"},{"l":"maze.visualisation"}];updateSearchResults();

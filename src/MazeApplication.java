@@ -1,8 +1,6 @@
 import maze.*;
 import maze.routing.*;
 import maze.visualisation.*;
-import java.util.List;
-import java.util.ArrayList;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -13,9 +11,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox; 
-import javafx.scene.layout.GridPane;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage; 
 import javafx.stage.FileChooser;
 import javafx.event.ActionEvent;
@@ -36,11 +31,22 @@ public class MazeApplication extends Application
 {
 	private RouteFinderGrid grid;
 
+	/** Launches a standalone application
+	 *  @param args the command line arguments
+	 */
 	public static void main(String[] args) 
 	{
 		launch(args);
 	}
 
+	/** The entry point of the application.
+	 *  A 600x600 scene is prepared 
+	 *  A HBox of 4 buttons is prepared and added to the scene
+	 *  A RouteFinderGrid is prepared and added to the scene
+	 *  The stage is prepared and the scene is added to the stage
+	 *  The stage is displayed
+	 *  @param stage: The stage of the application, onto which the application scene is set.
+	 */
 	@Override
 	public void start(Stage stage) 
 	{

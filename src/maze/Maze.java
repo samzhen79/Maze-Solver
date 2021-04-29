@@ -13,9 +13,8 @@ import java.io.Serializable;
  */
 public class Maze implements java.io.Serializable
 {
-	/**
-	 * Provides a representation of the four cardinal directions
-	 */
+	/** Provides a representation of the four cardinal directions
+	  */
 	public enum Direction 
 	{
 		NORTH,SOUTH,EAST,WEST;
