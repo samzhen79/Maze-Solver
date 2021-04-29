@@ -67,6 +67,7 @@ public class RouteFinderGrid extends javafx.scene.layout.GridPane
 		{
 			if (routefinder.step())
 			{
+				updateGrid();
 				return true;
 			}
 			else
