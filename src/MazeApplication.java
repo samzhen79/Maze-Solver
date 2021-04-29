@@ -1,23 +1,26 @@
 import maze.*;
 import maze.routing.*;
+import maze.visualisation.*;
 import java.util.List;
 import java.util.ArrayList;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.application.Application;
-import javafx.geometry.Insets;
+import javafx.scene.Scene; 
+import javafx.scene.control.Button;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox; 
 import javafx.scene.layout.GridPane;
-import javafx.scene.Scene; 
-import javafx.scene.control.Button;
-import javafx.stage.Stage; 
 import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage; 
 import javafx.stage.FileChooser;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 
 /** The MazeApplication class is a JavaFX application.
  *  Allows the user to specify a text file containing a maze representation.
@@ -27,12 +30,11 @@ import javafx.stage.FileChooser;
  *  (ii) Save the current route-solving state to a file.
  *  (iii) Load route-solving state froma file.
  *  @author Sam Zhen
- *  @version 25th April 2021
+ *  @version 29th April 2021
  */
 public class MazeApplication extends Application 
 {
-	private RouteFinder routefinder;
-	private GridPane mazegrid;
+	private RouteFinderGrid grid;
 
 	public static void main(String[] args) 
 	{
@@ -51,114 +53,147 @@ public class MazeApplication extends Application
 		Button saveroute = new Button("Save Route");
 		Button step = new Button("Step");
 
-		loadmaze.setOnAction(new EventHandler<ActionEvent>() 
+		Alert a = new Alert(AlertType.NONE);
+
+		loadmaze.setOnAction(e ->
 		{
-			@Override
-			public void handle(ActionEvent e)
+			FileChooser filechooser = new FileChooser();
+			filechooser.setTitle("Open Maze Text File");
+            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+            filechooser.getExtensionFilters().add(extFilter);
+
+			File file = filechooser.showOpenDialog(stage);
+			try
 			{
-				FileChooser filechooser = new FileChooser();
-				filechooser.setTitle("Open Map Text File");
-				File file = filechooser.showOpenDialog(stage);
-				Maze maze = null;
-				try
-				{
-					maze = Maze.fromTxt(file.getAbsolutePath());
-				}
-		    	catch(FileNotFoundException ex)
-		    	{
-		    		System.err.print(ex);
-		    	}
-		    	catch(IOException ex)
-		    	{
-		    		System.err.print(ex);
-		    	}
-		    	catch(InvalidMazeException ex)
-		    	{
-		    		System.err.print(ex);
-		    	}
+				Maze maze = Maze.fromTxt(file.getAbsolutePath());
+		    	RouteFinder routefinder = new RouteFinder(maze);
+		    	grid = new RouteFinderGrid(routefinder);
+		    	border.setCenter(grid);
 
-		    	routefinder = new RouteFinder(maze);
-
-		    	updateGrid();
 			}
+	    	catch(FileNotFoundException ex)
+	    	{
+	    		a.setAlertType(AlertType.INFORMATION);
+	    		a.setContentText("File could not be found.");
+	    		a.show();
+	    	}
+	    	catch(IOException ex)
+	    	{
+	    		a.setAlertType(AlertType.INFORMATION);
+	    		a.setContentText("File could not be accessed.");
+	    		a.show();
+	    	}
+	    	catch(InvalidMazeException ex)
+	    	{
+	    		a.setAlertType(AlertType.INFORMATION);
+	    		a.setContentText("The maze is invalid.\n" + ex);
+	    		a.show();
+	    	}
+	    	catch(NullPointerException ex)
+	    	{
+	    	}
 		});
 
-		step.setOnAction(new EventHandler<ActionEvent>() 
+		loadroute.setOnAction(e ->
 		{
-			@Override
-			public void handle(ActionEvent e)
+			FileChooser filechooser = new FileChooser();
+			filechooser.setTitle("Open Route File");
+            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("ROUTE files (*.route)", "*.route");
+            filechooser.getExtensionFilters().add(extFilter);
+
+			File file = filechooser.showOpenDialog(stage);
+			try
 			{
+				RouteFinder routefinder = RouteFinder.load(file.getAbsolutePath());
+		    	grid = new RouteFinderGrid(routefinder);
+		    	border.setCenter(grid);
+
+			}
+	    	catch(IOException ex)
+	    	{
+	    		a.setAlertType(AlertType.INFORMATION);
+	    		a.setContentText("File could not be deserialized.");
+	    		a.show();
+	    	}
+	    	catch(ClassNotFoundException ex)
+	    	{
+	    		a.setAlertType(AlertType.INFORMATION);
+	    		a.setContentText("File could not be deserialized.");
+	    		a.show();
+	    	}
+	    	catch(NullPointerException ex)
+	    	{
+	    	}
+		});
+
+		saveroute.setOnAction(e ->
+		{
+
+			if (grid != null)
+			{
+				FileChooser filechooser = new FileChooser();
+				filechooser.setTitle("Save Route");
+	            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("ROUTE files (*.route)", "*.route");
+	            filechooser.getExtensionFilters().add(extFilter);
+
+				File file = filechooser.showSaveDialog(stage);
 				try
 				{
-					routefinder.step();
+					grid.getRouteFinder().save(file.getAbsolutePath());
 				}
-				catch(NoRouteFoundException ex)
-				{
-					System.err.print(ex);
-				}
+		    	catch(IOException ex)
+		    	{
+		    		a.setAlertType(AlertType.INFORMATION);
+		    		a.setContentText("File could not be saved.");
+		    		a.show();
+		    	}
+		    	catch(NullPointerException ex)
+		    	{
 
-				updateGrid();
+		    	}
+		    }
+		    else
+		    {
+	    		a.setAlertType(AlertType.INFORMATION);
+	    		a.setContentText("No route to save.");
+	    		a.show();
+		    }
+		});
+
+		step.setOnAction(e ->
+		{
+			try
+			{
+				if(grid.step())
+				{
+		    		a.setAlertType(AlertType.INFORMATION);
+		    		a.setContentText("Route finished.");
+		    		a.show();
+				}
 			}
+			catch(NoRouteFoundException ex)
+			{
+	    		a.setAlertType(AlertType.INFORMATION);
+	    		a.setContentText("No route found.");
+	    		a.show();
+			}
+
+			
 		});
 
 		HBox hbox = new HBox(loadmaze, loadroute, saveroute, step);
 		hbox.setPadding(new Insets(0, 10, 15, 10));
 		hbox.setSpacing(10);
 
-		mazegrid = new GridPane();
-		mazegrid.setPadding(new Insets(0, 10, 10, 10));
+		grid = new RouteFinderGrid();
+		grid.setPadding(new Insets(0, 10, 10, 10));
 
 		border.setTop(hbox);
-		border.setCenter(mazegrid);
+		border.setCenter(grid);
 
 		stage.setTitle("MazeApplication");
 		stage.setScene(scene);
 		stage.show();
-	}
-
-	public void updateGrid()
-	{
-		List<List<Tile>> tiles = routefinder.getMaze().getTiles();
-
-		for (int i = 0; i < tiles.size(); i++)
-		{
-
-			for (int k = 0; k < tiles.get(i).size(); k++)
-			{
-				Tile tile = tiles.get(i).get(k);
-				Color color = null;
-
-				if (routefinder.getRoute().contains(tile))
-				{
-					color = Color.BLUE;
-				}
-				else
-				{
-					switch (tile.getType())
-					{
-						case ENTRANCE:
-							color = Color.BLUE;
-							break;
-
-						case EXIT:
-							color = Color.RED;
-							break;
-
-						case CORRIDOR:
-							color = Color.GREEN;
-							break;
-
-						case WALL:
-							color = Color.BLACK;
-							break;
-
-						default:
-					}
-				}
-
-				mazegrid.add(new Rectangle(25, 25, color), k, i);
-			}
-		}
 	}
 
 }

@@ -18,7 +18,7 @@ import java.lang.ClassNotFoundException;
 /** RouteFinder attempts to find a route from entrance to exit of a maze.
  * The state of the RouteFinder can be stepped through.
  *  @author Sam Zhen
- *  @version 28th April 2021
+ *  @version 29th April 2021
  */
 public class RouteFinder implements java.io.Serializable
 {
@@ -69,7 +69,7 @@ public class RouteFinder implements java.io.Serializable
 	 *  @param path: The full file path to the text file
 	 *  @return Returns the RouteFinder object that was loaded from the text file
 	 */
-	public static RouteFinder load(String path)
+	public static RouteFinder load(String path) throws IOException, ClassNotFoundException
 	{
 		try
 		{
@@ -85,20 +85,18 @@ public class RouteFinder implements java.io.Serializable
 		}
 		catch(IOException e)
 		{
-			System.out.println("IOException caught");
-			return null;
+			throw e;
 		}
 		catch(ClassNotFoundException e)
 		{
-			System.out.println("ClassNotFoundException caught"); 
-			return null;
+			throw e;
 		}
 	}
 
 	/** Loads a RouteFinder object from a file
 	 *  @param filename: The name of the file and its path
 	 */
-	public void save(String filename)
+	public void save(String filename) throws IOException
 	{
 		try
 		{
@@ -112,8 +110,7 @@ public class RouteFinder implements java.io.Serializable
 		}
 		catch(IOException e)
 		{
-			System.out.println("IOException caught");
-			System.err.println(e);
+			throw e;
 		}
 	}
 
