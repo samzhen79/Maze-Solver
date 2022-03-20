@@ -1,25 +1,36 @@
-# Where do I put my files?
+# Maze Solver
+This is a simple maze solving application that goes through a step by step process accompanied by a visualisation of the maze and route.
 
-You should store all of your Java source files in the `src` directory, or subdirectories within the `src` directory.
+![image](https://user-images.githubusercontent.com/75619220/159155589-d3f7f132-72cb-4401-9a78-f5f6f1009361.png)
 
-You should store any graphics files (e.g. `.jpg`) or other non source-code resources in the `resources` directory, or subdirectories within the `src` directory.
+## General Information
+This application uses a stack and a brute force approach to solving the mazes. The route finder will always go left first and then if met with a dead end will return to the last junction and try a different clockwise direction.
 
-# How do I compile/run my code
+The application reads a displays the maze from a text input.
 
-For convenience we've supplied some execution scripts that will compile/run code with the `--add-modules` flag set (for Java FX). Use `javac.sh` to compile on Linux and Mac OS, or `javac.bat` to compile on Windows. Likewise, use `java.sh` to run on Linux and Mac OS, or `java.bat` to run on Windows. E.g.
+![image](https://user-images.githubusercontent.com/75619220/159155864-059f804a-c11b-4879-93a2-af899192d8e4.png)
+
+Symbol meaning:
+* "#" : Wall
+* "." : Corridor
+* "e" : Entrance
+* "x" : Exit
+
+The application can also save/load a route.
+
+## Usage
+
+Use `javac.bat` to compile and `java.bat` to run the application on Windows.
 
 ```
-$ cd comp16412-coursework-1_username
-$ ./javac.sh src/MazeApplication.java  
-$ ./java.sh MazeApplication
+$ ./javac.bat src/MazeApplication.java  
+$ ./java.bat MazeApplication
 ```
+To use the application you must first load a maze or route, some example maze/routes can be found in the resources folder. When a suitable maze/route has been loaded the step button will allow you to step through the route finder and you will be able to see the a solution being formed step by step.
 
-Note that in the above example, on line 3, the name of the class file to run (`MazeApplication`) is **NOT** prefixed with the source path.
+Save Route will allow you to save the current state of the route along with the maze.
 
-# How do I compile/run the tests?
+There are tests available to check proper functionality of the maze solver which can be run using `run_tests.bat`.
 
-We've supplied a shell file, `run_tests.sh`, that should work on Linux/Mac OS.
-
-The file `run_tests.bat` should do the same thing on Windows. This file is purely for your convenience and (a) won't be used in marking, (b) isn't something we're going to provide lots of support for!
-
-
+## Documentation
+You can find the JavaDoc for the code here https://samzhen79.github.io/Maze-Solver/javadoc/
